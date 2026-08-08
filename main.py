@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 from orchestrator import run_risk_check, run_authenticity_check, run_review_check
 import audit_log
 import agents.authenticity_agent as auth_agent
+import glob
 
 app = FastAPI()
 
@@ -139,7 +140,7 @@ def api_live_event():
         headline = f"{customer} in {city} ordered {product} - Rs.{amount:,.0f} ({'COD' if amount < 5000 else 'Prepaid'})"
         agent = "Risk Scoring"
     elif event_type == "authenticity":
-        img_path = random.choice(auth_agent.reference_paths)
+        img_path = random.choice(glob.glob("static/sample_listings/*.jpg"))
         product = random.choice(PRODUCT_LABELS)
         msrp = random.choice([1500, 2500, 3200, 4500])
         price = round(msrp * random.choice([0.85, 0.9, 0.15, 0.1]), 0)
@@ -158,7 +159,7 @@ def api_live_event():
 
 @app.get("/api/authenticity-sample")
 def api_authenticity_sample(scenario: str = "genuine"):
-    img_path = random.choice(auth_agent.reference_paths)
+    img_path = random.choice(glob.glob("static/sample_listings/*.jpg"))
     msrp = 1500
     price = msrp * 0.85 if scenario == "genuine" else msrp * 0.08
     result = run_authenticity_check(img_path, price, msrp, seller_type="established")

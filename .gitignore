@@ -1,5 +1,4 @@
 data/train_transaction.csv
-data/ieee_fraud_sample.csv
 data/dataset-chanel-luxury-bags/
 data/reference_images/
 __pycache__/
